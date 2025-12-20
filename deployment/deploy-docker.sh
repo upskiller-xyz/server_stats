@@ -6,7 +6,7 @@ set -e
 #
 # Options:
 #   --with-nginx        Deploy with nginx reverse proxy
-#   --port PORT         Set the host port (default: 8080)
+#   --port PORT         Set the host port (default: 8085)
 #   --build             Force rebuild the Docker image
 #   --debug             Enable debug logging (verbose output)
 
@@ -18,7 +18,7 @@ NC='\033[0m'
 
 # Default values
 WITH_NGINX=false
-HOST_PORT=8080
+HOST_PORT=8085
 FORCE_BUILD=false
 DEBUG_MODE=false
 
@@ -101,8 +101,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 # Update port in docker-compose.yml
-echo -e "${YELLOW}Configuring port mapping: $HOST_PORT:8080${NC}"
-sed -i.bak "s/\"[0-9]*:8080\"/\"$HOST_PORT:8080\"/g" docker-compose.yml
+echo -e "${YELLOW}Configuring port mapping: $HOST_PORT:8085${NC}"
+sed -i.bak "s/\"[0-9]*:8085\"/\"$HOST_PORT:8085\"/g" docker-compose.yml
 
 # Configure environment file based on debug mode
 if [ "$DEBUG_MODE" = true ]; then
@@ -112,7 +112,7 @@ if [ "$DEBUG_MODE" = true ]; then
     else
         cat > .env.docker << EOF
 # Docker Environment Configuration - DEBUG MODE
-PORT=8080
+PORT=8085
 FLASK_ENV=development
 FLASK_DEBUG=True
 LOG_LEVEL=DEBUG
@@ -130,7 +130,7 @@ else
         echo -e "${YELLOW}Configuring PRODUCTION mode environment${NC}"
         cat > .env.docker << EOF
 # Docker Environment Configuration
-PORT=8080
+PORT=8085
 FLASK_ENV=production
 FLASK_DEBUG=False
 LOG_LEVEL=INFO
@@ -220,7 +220,7 @@ echo -e "${GREEN}========================================${NC}"
 echo ""
 echo -e "Container: ${GREEN}model-server${NC}"
 echo -e "Host Port: ${GREEN}$HOST_PORT${NC}"
-echo -e "Container Port: ${GREEN}8080${NC}"
+echo -e "Container Port: ${GREEN}8085${NC}"
 if [ "$WITH_NGINX" = true ]; then
     echo -e "Nginx: ${GREEN}enabled (ports 80, 443)${NC}"
 fi

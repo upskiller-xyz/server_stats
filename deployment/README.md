@@ -136,7 +136,7 @@ sudo systemctl status model-server
 
 ```bash
 # Health check
-curl http://localhost:8080/
+curl http://localhost:8085/
 
 # Expected response:
 # {"status": "ready", "timestamp": "2025-01-01T00:00:00Z"}

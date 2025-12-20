@@ -8,7 +8,7 @@ User=modelserver
 Group=modelserver
 WorkingDirectory=/opt/model-server
 Environment="PATH=/opt/model-server/venv/bin"
-Environment="PORT=8080"
+Environment="PORT=8085"
 EnvironmentFile=/opt/model-server/.env
 ExecStart=/opt/model-server/venv/bin/gunicorn \
     --bind 0.0.0.0:${PORT} \

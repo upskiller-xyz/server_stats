@@ -112,7 +112,7 @@ class ServerLauncher:
     def run_server(
         app: ServerApplication,
         host: str = "0.0.0.0",
-        port: int = 8080,
+        port: int = 8085,
         debug: bool = True
     ) -> None:
         """Run the server"""

@@ -9,7 +9,7 @@ set -e
 #   --skip-nginx        Skip nginx installation and configuration
 #   --skip-ssl          Skip SSL certificate setup
 #   --domain DOMAIN     Set the domain name for nginx configuration
-#   --port PORT         Set the application port (default: 8080)
+#   --port PORT         Set the application port (default: 8085)
 #   --debug             Enable debug logging (verbose output)
 
 # Color codes for output
@@ -22,7 +22,7 @@ NC='\033[0m' # No Color
 SKIP_NGINX=false
 SKIP_SSL=true
 DOMAIN=""
-APP_PORT=8080
+APP_PORT=8085
 DEBUG_MODE=false
 INSTALL_DIR="/opt/model-server"
 SERVICE_USER="modelserver"

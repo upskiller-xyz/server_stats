@@ -142,27 +142,27 @@ services:
   obstruction-server:
     build: ..
     ports:
-      - "8081:8080"  # Host:Container
+      - "8081:8085"  # Host:Container
     restart: unless-stopped
     env_file: .env.docker
 ```
 
 ### Service Ports
 
-- **Container Port**: 8080 (internal, fixed)
+- **Container Port**: 8085 (internal, fixed)
 - **Host Port**: 8081 (external, configurable)
 
 To change the host port, edit `docker-compose.yml`:
 ```yaml
 ports:
-  - "YOUR_PORT:8080"
+  - "YOUR_PORT:8085"
 ```
 
 ### Environment Variables
 
 Configure in `.env.docker`:
 ```bash
-PORT=8080                      # Internal port (don't change)
+PORT=8085                      # Internal port (don't change)
 FLASK_ENV=production           # Production mode
 FLASK_DEBUG=False              # Disable debug
 CUDA_VISIBLE_DEVICES=-1        # Disable GPU
@@ -214,7 +214,7 @@ docker compose logs -f
 docker exec -it obstruction-server bash
 
 # Run a single command
-docker exec obstruction-server curl http://localhost:8080/
+docker exec obstruction-server curl http://localhost:8085/
 
 # Check Python version
 docker exec obstruction-server python --version
@@ -344,7 +344,7 @@ docker ps | grep obstruction-server
 docker inspect obstruction-server | grep -A 10 Health
 
 # Test from inside container
-docker exec obstruction-server curl http://localhost:8080/
+docker exec obstruction-server curl http://localhost:8085/
 
 # Check logs
 docker logs --tail 50 obstruction-server
@@ -406,7 +406,7 @@ Adjust in `Dockerfile` or override with docker-compose:
 ```yaml
 services:
   obstruction-server:
-    command: gunicorn --bind :8080 --workers 4 --threads 8 --timeout 900 main:app
+    command: gunicorn --bind :8085 --workers 4 --threads 8 --timeout 900 main:app
 ```
 
 Rule of thumb: `workers = (2 x CPU_CORES) + 1`
