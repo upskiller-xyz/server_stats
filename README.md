@@ -161,9 +161,9 @@ Create a `.env` file with required configurations:
 MODEL=df_default_2.0.0
 PORT=8000
 GCP_REGION=us-central1
-SERVER_NAME=stats.server
+SERVER_NAME=stats-server
 REPO_NAME=server_template
-IMAGE_NAME=stats.server
+IMAGE_NAME=stats-server
 
 SCW_REGISTRY_NAMESPACE=nsp
 SCW_PROJECT_ID=project-id
@@ -174,8 +174,8 @@ SCW_IMAGE=server_template
 #### Docker Deployment
 Build and run using Docker:
 ```sh
-docker build -t stats.server .
-docker run -p 8000:8000 stats.server
+docker build -t stats-server .
+docker run -p 8000:8000 stats-server
 ```
 
 #### Cloud Deployment
@@ -316,10 +316,10 @@ Strong copyleft. You **can** use, distribute and modify this code in both academ
 
 ## Attribution
 
-📖 **Academic/Industry Use**: Please cite this work as described in [CITATION.cff](docs/citation/CITATION.cff), [CITE.txt](docs/citation/CITE.txt) or [ATTRIBUTION.md](docs/citation/ATTRIBUTION.md). Alternatively you can download the BibTeX file [here](docs/citation/stats.server.bib) by adding it to `.tex` files by
+📖 **Academic/Industry Use**: Please cite this work as described in [CITATION.cff](docs/citation/CITATION.cff), [CITE.txt](docs/citation/CITE.txt) or [ATTRIBUTION.md](docs/citation/ATTRIBUTION.md). Alternatively you can download the BibTeX file [here](docs/citation/stats-server.bib) by adding it to `.tex` files by
 
 ```tex
-\bibliography{stats.server}
+\bibliography{stats-server}
 ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

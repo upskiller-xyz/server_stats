@@ -43,8 +43,8 @@ sudo bash deploy.sh
 | File | Description |
 |------|-------------|
 | `deploy.sh` | Automated native deployment script for VM setup |
-| `stats.server.service` | Systemd service file for automatic startup |
-| `nginx-stats.server.conf` | Nginx reverse proxy configuration |
+| `stats-server.service` | Systemd service file for automatic startup |
+| `nginx-stats-server.conf` | Nginx reverse proxy configuration |
 | `.env.production` | Production environment configuration template |
 | `VM_DEPLOYMENT.md` | Comprehensive native deployment documentation |
 
@@ -109,27 +109,27 @@ See [VM_DEPLOYMENT.md](VM_DEPLOYMENT.md) for detailed documentation.
 
 | Item | Path |
 |------|------|
-| Application | `/opt/stats.server` |
-| Virtual Environment | `/opt/stats.server/venv` |
-| Configuration | `/opt/stats.server/.env` |
-| Systemd Service | `/etc/systemd/system/stats.server.service` |
-| Nginx Config | `/etc/nginx/sites-available/stats.server` |
-| Application Logs | `/var/log/stats.server/` |
-| Nginx Logs | `/var/log/nginx/stats.server-*.log` |
+| Application | `/opt/stats-server` |
+| Virtual Environment | `/opt/stats-server/venv` |
+| Configuration | `/opt/stats-server/.env` |
+| Systemd Service | `/etc/systemd/system/stats-server.service` |
+| Nginx Config | `/etc/nginx/sites-available/stats-server` |
+| Application Logs | `/var/log/stats-server/` |
+| Nginx Logs | `/var/log/nginx/stats-server-*.log` |
 
 ## Service Management
 
 ```bash
 # Start/stop/restart service
-sudo systemctl start stats.server
-sudo systemctl stop stats.server
-sudo systemctl restart stats.server
+sudo systemctl start stats-server
+sudo systemctl stop stats-server
+sudo systemctl restart stats-server
 
 # View logs
-sudo journalctl -u stats.server -f
+sudo journalctl -u stats-server -f
 
 # Check status
-sudo systemctl status stats.server
+sudo systemctl status stats-server
 ```
 
 ## Testing Deployment
