@@ -6,9 +6,12 @@ from . import metrics as m
 
 class MetricType(ExtendedEnum):
     """Enumeration of available metrics."""
-    
+
     MEAN = m.MeanMetric
     MEDIAN = m.MedianMetric
+    MIN = m.MinMetric
+    MAX = m.MaxMetric
+    VALID_AREA = m.ValidAreaMetric
     RANGE_POLYGON = m.RangePolygonMetric
     THRESHOLD_ACCURACY = m.ThresholdAccuracy
     COMPLIANCE_ANALYSIS = m.ComplianceMetric
