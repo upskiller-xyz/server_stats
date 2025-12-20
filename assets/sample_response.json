@@ -1,15 +1,1 @@
-{
-  "metrics": {
-    "mean": 5.142857142857143,
-    "median": 5.5,
-    "mae": 2.1428571428571432,
-    "threshold_accuracy": 0.8571428571428571,
-    "quantized_iou": 0.7142857142857143,
-    "compliance": 0.6428571428571429,
-    "range_polygon": {
-      "min": 1.5,
-      "max": 9.2,
-      "range": 7.7
-    }
-  }
-}
+{"metrics": {"max": 9.2, "mean": 3.39375, "median": 1.5, "min": 0.1, "valid_area": 50.0}, "status": "success"}
