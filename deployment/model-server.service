@@ -1,0 +1,40 @@
+[Unit]
+Description=Model Server - Generic Flask application server
+After=network.target
+
+[Service]
+Type=simple
+User=modelserver
+Group=modelserver
+WorkingDirectory=/opt/model-server
+Environment="PATH=/opt/model-server/venv/bin"
+Environment="PORT=8080"
+EnvironmentFile=/opt/model-server/.env
+ExecStart=/opt/model-server/venv/bin/gunicorn \
+    --bind 0.0.0.0:${PORT} \
+    --workers ${WORKERS} \
+    --threads ${THREADS} \
+    --timeout ${TIMEOUT} \
+    --access-logfile /var/log/model-server/access.log \
+    --error-logfile /var/log/model-server/error.log \
+    --log-level ${GUNICORN_LOG_LEVEL} \
+    --chdir /opt/model-server/src \
+    main:app
+
+# Restart policy
+Restart=always
+RestartSec=10s
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log/model-server
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+
+[Install]
+WantedBy=multi-user.target
