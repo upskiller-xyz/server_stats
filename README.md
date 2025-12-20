@@ -15,16 +15,16 @@
     <img src="https://github.com/upskiller-xyz/DaylightFactor/blob/main/docs/images/logo_upskiller.png" alt="Logo" height="100" >
   </a>
 
-  <h3 align="center">XXX Server</h3>
+  <h3 align="center">Server Stats</h3>
 
   <p align="center">
-    Short description
+    REST API for calculating statistical metrics on matrices with binary masks
     <br />
-    <a href="https://github.com/upskiller-xyz/server_template">View Demo</a>
+    <a href="https://github.com/upskiller-xyz/server_stats">View Demo</a>
     ·
-    <a href="https://github.com/upskiller-xyz/server_template/issues">Report Bug</a>
+    <a href="https://github.com/upskiller-xyz/server_stats/issues">Report Bug</a>
     ·
-    <a href="https://github.com/upskiller-xyz/server_template/issues">Request Feature</a>
+    <a href="https://github.com/upskiller-xyz/server_stats/issues">Request Feature</a>
   </p>
 </div>
 
@@ -71,7 +71,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Longer description
+Server Stats is a Flask-based REST API for calculating statistical metrics on numerical matrices with binary masks. Built with strict OOP principles, it provides a clean, scalable architecture for metric calculation services.
 
 
 
@@ -94,33 +94,21 @@ To get a local copy up and running follow these simple steps.
 ### Prerequisites
 
 * [Python 3.13+](https://www.python.org/downloads/)
-* [Poetry](https://python-poetry.org/docs/#installation)
-* CUDA-capable GPU (optional, for GPU acceleration)
 
 ### Installation
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/upskiller-xyz/server_template.git
-   cd server_template
+   git clone https://github.com/upskiller-xyz/server_stats.git
+   cd server_stats
    ```
 
-2. Install dependencies using Poetry:
+2. Install dependencies:
    ```sh
-   poetry install
+   pip install -r requirements.txt
    ```
 
-3. Activate the virtual environment:
-   ```sh
-   poetry shell
-   ```
-
-4. Set environment variables (optional):
-   ```sh
-   export PORT=8000               # Server port
-   ```
-
-5. Run the server:
+3. Run the server:
    ```sh
    python main.py
    ```
@@ -130,68 +118,39 @@ To get a local copy up and running follow these simple steps.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-### 🎯 Interactive Demo with PyTorch Models
+### 🎯 Interactive Demo
 
-**Start here!** For hands-on examples with PyTorch model loading and feature extraction, see the **[Playground Notebook](example/demo.ipynb)**:
+**Start here!** For hands-on examples, see the **[Playground Notebook](examples/demo.ipynb)**:
 
 ```bash
-# Install Jupyter and start the demo
-poetry run jupyter notebook example/demo.ipynb
+jupyter notebook examples/demo.ipynb
 ```
 
 ### 🔧 API Endpoints
 
-The server provides REST API endpoints for model predictions:
+See full documentation at **[docs/api.md](docs/api.md)**
 
-#### Health Check
-Check if the server is running and model is loaded:
+#### POST /run
+Calculate metrics on matrix with binary mask:
 
 ```python
 import requests
 
-response = requests.get("http://localhost:8000/")
+response = requests.post("http://localhost:5000/run", json={
+    "matrix": [[1.5, 2.3, 3.7], [4.2, 5.8, 6.1]],
+    "mask": [[1, 1, 0], [1, 0, 1]]
+})
+
 print(response.json())
-# Output: {"status": "ready", "model_loaded": true, "timestamp": "2024-01-01T00:00:00Z"}
+# {"metrics": {"mean": 3.45, "median": 3.7, ...}}
 ```
 
-#### Image Prediction
-Submit an image for model prediction:
+#### GET /health
+Health check endpoint:
 
 ```python
-import requests
-
-# Send image file for prediction
-with open("input_image.jpg", "rb") as f:
-    files = {"file": f}
-    response = requests.post("http://localhost:8000/run", files=files)
-
-result = response.json()
-print(f"Prediction result: {result}")
-```
-
-#### Example with OpenCV preprocessing:
-
-```python
-import cv2
-import requests
-import numpy as np
-from io import BytesIO
-
-# Load and preprocess image
-image = cv2.imread("input.jpg")
-image = cv2.resize(image, (480, 640))  # Resize to model input size
-
-# Convert to bytes
-_, buffer = cv2.imencode('.jpg', image)
-image_bytes = BytesIO(buffer)
-
-# Send prediction request
-files = {"file": ("image.jpg", image_bytes, "image/jpeg")}
-response = requests.post("http://localhost:8000/run", files=files)
-
-prediction = response.json()
-print(f"Model output shape: {prediction.get('output_shape')}")
-print(f"Processing time: {prediction.get('processing_time_ms')}ms")
+response = requests.get("http://localhost:5000/health")
+# {"status": "healthy"}
 ```
 
 ### Deployment

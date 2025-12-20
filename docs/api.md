@@ -1,209 +1,172 @@
 # API Documentation
 
-This document describes the main API endpoints for the Model Server.
-Example requests are provided in both **Python** (using `requests`) and **TypeScript** (using `fetch`). Use [the playground notebook](../playground.ipynb) for hands-on examples with the API.
+Server Stats REST API for calculating statistical metrics on matrices with binary masks.
 
 ---
 
-## `/`
-**GET** `/`
-Health check endpoint that returns the current server status and information.
+## Base URL
 
-### Request
-- **Content-Type:** Not required (GET request)
-- **Body:** None
-
-### Response
-- **200 OK**
-  ```json
-  {
-    "name": "Upskiller Model Server",
-    "version": "2.0.0",
-    "status": "running"
-  }
-  ```
-
-### Python Example
-```python
-import requests
-
-response = requests.get("http://localhost:8000/")
-print(response.json())
-# Output: {"name": "Upskiller Model Server", "version": "2.0.0", "status": "running"}
 ```
-
-### TypeScript Example
-```typescript
-fetch("http://localhost:8000/")
-  .then(res => res.json())
-  .then(data => console.log(data));
+http://localhost:5000
 ```
 
 ---
 
-## `/run`
-**POST** `/run`
-Runs model inference on an uploaded image and returns prediction results.
+## Endpoints
 
-### Request
-- **Content-Type:** `multipart/form-data`
-- **Body:**
-  - `file`: The image file (PNG/JPG/JPEG/GIF) to process
+### POST /run
 
-### Response
-- **200 OK** (Success)
-  ```json
-  {
-    "prediction": [[0.1, 0.2], [0.3, 0.4]],
-    "shape": [2, 2],
-    "status": "success"
-  }
-  ```
-- **400 Bad Request** (Invalid input)
-  ```json
-  {
-    "error": "No file uploaded"
-  }
-  ```
-  ```json
-  {
-    "error": "File must be an image"
-  }
-  ```
-- **500 Internal Server Error** (Processing error)
-  ```json
-  {
-    "error": "Prediction failed: <error message>"
-  }
-  ```
+Calculate statistical metrics on a matrix with a binary mask.
 
-### Response Fields
-- `field1`: description, format
-- `field2`: description, format
-- `status`: "success" for successful predictions
+#### Request
 
-### Python Example
-```python
-import requests
+**Content-Type:** `application/json`
 
-# Single image prediction
-with open("input_image.jpg", "rb") as f:
-    files = {"file": f}
-    response = requests.post("http://localhost:8000/run", files=files)
-
-result = response.json()
-if result.get("status") == "success":
-    prediction = result["prediction"]
-    shape = result["shape"]
-    print(f"Prediction shape: {shape}")
-    print(f"Prediction values: {prediction[:2]}")  # First 2 rows
-else:
-    print(f"Error: {result.get('error')}")
-```
-
-### Python Example with OpenCV
-```python
-import cv2
-import requests
-import numpy as np
-from io import BytesIO
-
-# Load and preprocess image
-image = cv2.imread("input.jpg")
-image = cv2.resize(image, (640, 480))  # Resize to desired input size
-
-# Convert to bytes for upload
-_, buffer = cv2.imencode('.jpg', image)
-image_bytes = BytesIO(buffer)
-
-# Send prediction request
-files = {"file": ("image.jpg", image_bytes, "image/jpeg")}
-response = requests.post("http://localhost:8000/run", files=files)
-
-prediction = response.json()
-
-```
-
-### TypeScript Example
-```typescript
-const formData = new FormData();
-const fileInput = document.getElementById('imageFile') as HTMLInputElement;
-if (fileInput.files?.[0]) {
-  formData.append('file', fileInput.files[0]);
-}
-
-fetch("http://localhost:8000/route1", {
-  method: "POST",
-  body: formData
-})
-  .then(res => res.json())
-  .then(data => {
-    if (data.status === 'success') {
-      console.log('Prediction shape:', data.shape);
-      console.log('Prediction data:', data.prediction);
-    } else {
-      console.error('Error:', data.error);
-    }
-  })
-  .catch(err => console.error('Request failed:', err));
-```
-
-### cURL Example
-```bash
-curl -X POST \
-  -F "file=@/path/to/your/image.jpg" \
-  http://localhost:8000/route1
-```
-
-
----
-
-## Error Handling
-
-### Client Errors (4xx)
-- **400 Bad Request**: Missing file upload or invalid file format
-- **422 Unprocessable Entity**: File processing errors
-
-### Server Errors (5xx)
-- **500 Internal Server Error**: Model inference failures, memory issues, or server crashes
-
-### Error Response Format
+**Body:**
 ```json
 {
-  "error": "Descriptive error message",
-  "status": "error"  // May be present
+  "matrix": [[float, ...], ...],
+  "mask": [[int, ...], ...]
 }
 ```
 
----
+**Parameters:**
+- `matrix` (required): 2D array of float values (0.0 - 10.0)
+- `mask` (required): 2D array of binary values (0 or 1), same dimensions as matrix
 
-## Usage Notes
+**Validation Rules:**
+- Matrix values must be floats between 0.0 and 10.0
+- Mask values must be binary (0 or 1)
+- Matrix and mask must have identical dimensions
+- Mask must contain at least one value of 1
 
-- **Server Port**: Default port is 8000 (configurable via `PORT` environment variable)
-- **File Upload**: Always use `multipart/form-data` for file uploads
-- **Content Types**: Server validates uploaded files are images
-- **Model Loading**: Model is loaded on first prediction request (may cause initial delay)
-- **Response Format**: All endpoints return JSON responses
-- **Logging**: Server provides structured logging for monitoring and debugging
+#### Response
 
----
-
-## Development & Testing
-
-### Local Development
-```bash
-# Start the server
-python main.py
-
-# Test health check
-curl http://localhost:8000/
-
-# Test prediction with sample image
-curl -X POST -F "file=@sample.jpg" http://localhost:8000/run
+**Success (200):**
+```json
+{
+  "metrics": {
+    "mean": float,
+    "median": float,
+    "mae": float,
+    "threshold_accuracy": float,
+    "quantized_iou": float,
+    "compliance": float,
+    "range_polygon": object
+  }
+}
 ```
 
-### Environment Variables
-- `MODEL`: Model checkpoint name (default: "df_default_2.0.0")
-- `PORT`: Server port (default: 8000)
+**Metrics:**
+- `mean`: Arithmetic mean of masked values
+- `median`: Median of masked values
+- `mae`: Mean Absolute Error
+- `threshold_accuracy`: Accuracy at threshold values
+- `quantized_iou`: Intersection over Union with quantization
+- `compliance`: Compliance metric
+- `range_polygon`: Range polygon analysis
+
+**Error (400):**
+```json
+{
+  "error": "error message"
+}
+```
+
+**Error (500):**
+```json
+{
+  "error": "Internal server error"
+}
+```
+
+#### Examples
+
+**Python:**
+```python
+import requests
+
+response = requests.post(
+    "http://localhost:5000/run",
+    json={
+        "matrix": [[1.5, 2.3, 3.7], [4.2, 5.8, 6.1]],
+        "mask": [[1, 1, 0], [1, 0, 1]]
+    }
+)
+
+if response.status_code == 200:
+    metrics = response.json()["metrics"]
+    print(f"Mean: {metrics['mean']:.2f}")
+else:
+    print(f"Error: {response.json()['error']}")
+```
+
+**cURL:**
+```bash
+curl -X POST http://localhost:5000/run \
+  -H "Content-Type: application/json" \
+  -d @assets/sample_request.json
+```
 
 ---
+
+### GET /health
+
+Health check endpoint to verify server status.
+
+#### Request
+
+No parameters required.
+
+#### Response
+
+**Success (200):**
+```json
+{
+  "status": "healthy"
+}
+```
+
+#### Examples
+
+**Python:**
+```python
+import requests
+
+response = requests.get("http://localhost:5000/health")
+print(response.json())
+# {"status": "healthy"}
+```
+
+**cURL:**
+```bash
+curl http://localhost:5000/health
+```
+
+---
+
+## Error Codes
+
+| Status Code | Description |
+|------------|-------------|
+| 200 | Success |
+| 400 | Bad Request - Invalid input data |
+| 500 | Internal Server Error |
+
+## Common Error Messages
+
+| Error Message | Cause |
+|--------------|-------|
+| `Missing 'matrix' in request body` | Request missing required matrix field |
+| `Missing 'mask' in request body` | Request missing required mask field |
+| `Matrix and mask must have the same dimensions` | Dimension mismatch |
+| `Matrix values must be floats between 0 and 10` | Invalid matrix values |
+| `Mask values must be binary (0 or 1)` | Invalid mask values |
+| `Mask must contain at least one value of 1` | No valid area in mask |
+
+---
+
+## Sample Files
+
+- Request: [assets/sample_request.json](../assets/sample_request.json)
+- Response: [assets/sample_response.json](../assets/sample_response.json)
