@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  model-server:
+  stats.server:
     build:
       context: ..
       dockerfile: Dockerfile
-    container_name: model-server
+    container_name: stats.server
     restart: unless-stopped
     ports:
       - "8085:8085"  # Map host port 8085 to container port 8085
@@ -23,7 +23,7 @@ services:
       - .env.docker
     volumes:
       # Optional: Mount logs directory for persistence
-      - ./logs:/var/log/model-server
+      - ./logs:/var/log/stats.server
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8085/"]
       interval: 30s
@@ -31,12 +31,12 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      - model-server-network
+      - stats.server-network
 
   # Optional: Nginx reverse proxy
   nginx:
     image: nginx:alpine
-    container_name: model-server-nginx
+    container_name: stats.server-nginx
     restart: unless-stopped
     ports:
       - "80:80"
@@ -47,12 +47,12 @@ services:
       # - ./ssl/cert.pem:/etc/nginx/ssl/cert.pem:ro
       # - ./ssl/key.pem:/etc/nginx/ssl/key.pem:ro
     depends_on:
-      - model-server
+      - stats.server
     networks:
-      - model-server-network
+      - stats.server-network
     profiles:
       - with-nginx
 
 networks:
-  model-server-network:
+  stats.server-network:
     driver: bridge

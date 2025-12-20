@@ -24,9 +24,9 @@ SKIP_SSL=true
 DOMAIN=""
 APP_PORT=8085
 DEBUG_MODE=false
-INSTALL_DIR="/opt/model-server"
+INSTALL_DIR="/opt/stats.server"
 SERVICE_USER="modelserver"
-SERVICE_NAME="model-server"
+SERVICE_NAME="stats.server"
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
@@ -199,12 +199,12 @@ else
 fi
 
 # Create log directory
-mkdir -p /var/log/model-server
-chown "$SERVICE_USER:$SERVICE_USER" /var/log/model-server
+mkdir -p /var/log/stats.server
+chown "$SERVICE_USER:$SERVICE_USER" /var/log/stats.server
 
 # Install systemd service
 echo -e "${YELLOW}[10/10] Installing systemd service...${NC}"
-cp "$INSTALL_DIR/deployment/model-server.service" "/etc/systemd/system/$SERVICE_NAME.service"
+cp "$INSTALL_DIR/deployment/stats.server.service" "/etc/systemd/system/$SERVICE_NAME.service"
 systemctl daemon-reload
 systemctl enable "$SERVICE_NAME.service"
 
@@ -228,13 +228,13 @@ if [ "$SKIP_NGINX" = false ]; then
 
     # Configure nginx
     if [ -n "$DOMAIN" ]; then
-        sed "s/your-domain.com/$DOMAIN/g" "$INSTALL_DIR/deployment/nginx-model-server.conf" > /etc/nginx/sites-available/model-server
+        sed "s/your-domain.com/$DOMAIN/g" "$INSTALL_DIR/deployment/nginx-stats.server.conf" > /etc/nginx/sites-available/stats.server
     else
-        cp "$INSTALL_DIR/deployment/nginx-model-server.conf" /etc/nginx/sites-available/model-server
+        cp "$INSTALL_DIR/deployment/nginx-stats.server.conf" /etc/nginx/sites-available/stats.server
     fi
 
     # Enable site
-    ln -sf /etc/nginx/sites-available/model-server /etc/nginx/sites-enabled/model-server
+    ln -sf /etc/nginx/sites-available/stats.server /etc/nginx/sites-enabled/stats.server
 
     # Test nginx configuration
     if nginx -t; then
@@ -266,7 +266,7 @@ echo -e "Application Directory: ${GREEN}$INSTALL_DIR${NC}"
 echo -e "Service Name: ${GREEN}$SERVICE_NAME${NC}"
 echo -e "Service User: ${GREEN}$SERVICE_USER${NC}"
 echo -e "Application Port: ${GREEN}$APP_PORT${NC}"
-echo -e "Log Directory: ${GREEN}/var/log/model-server${NC}"
+echo -e "Log Directory: ${GREEN}/var/log/stats.server${NC}"
 if [ "$DEBUG_MODE" = true ]; then
     echo -e "Debug Mode: ${YELLOW}ENABLED${NC}"
     echo -e "  ${YELLOW}⚠ Debug mode provides verbose logging for troubleshooting${NC}"

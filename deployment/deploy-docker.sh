@@ -148,27 +148,27 @@ fi
 mkdir -p logs
 
 # Stop existing instances of this container only
-echo -e "${YELLOW}Stopping existing instances of model-server...${NC}"
+echo -e "${YELLOW}Stopping existing instances of stats.server...${NC}"
 
-# Stop and remove model-server container if it exists
-if docker ps -a --format '{{.Names}}' | grep -q '^model-server$'; then
-    echo -e "${YELLOW}  Stopping model-server container...${NC}"
-    docker stop model-server 2>/dev/null || true
-    docker rm model-server 2>/dev/null || true
-    echo -e "${GREEN}  ✓ model-server stopped and removed${NC}"
+# Stop and remove stats.server container if it exists
+if docker ps -a --format '{{.Names}}' | grep -q '^stats.server$'; then
+    echo -e "${YELLOW}  Stopping stats.server container...${NC}"
+    docker stop stats.server 2>/dev/null || true
+    docker rm stats.server 2>/dev/null || true
+    echo -e "${GREEN}  ✓ stats.server stopped and removed${NC}"
 fi
 
-# Stop and remove model-server-nginx container if it exists (for --with-nginx deployments)
-if docker ps -a --format '{{.Names}}' | grep -q '^model-server-nginx$'; then
-    echo -e "${YELLOW}  Stopping model-server-nginx container...${NC}"
-    docker stop model-server-nginx 2>/dev/null || true
-    docker rm model-server-nginx 2>/dev/null || true
-    echo -e "${GREEN}  ✓ model-server-nginx stopped and removed${NC}"
+# Stop and remove stats.server-nginx container if it exists (for --with-nginx deployments)
+if docker ps -a --format '{{.Names}}' | grep -q '^stats.server-nginx$'; then
+    echo -e "${YELLOW}  Stopping stats.server-nginx container...${NC}"
+    docker stop stats.server-nginx 2>/dev/null || true
+    docker rm stats.server-nginx 2>/dev/null || true
+    echo -e "${GREEN}  ✓ stats.server-nginx stopped and removed${NC}"
 fi
 
 # Clean up unused networks for this project only
-docker network ls --format '{{.Name}}' | grep -q '^deployment_model-server-network$' && \
-    docker network rm deployment_model-server-network 2>/dev/null || true
+docker network ls --format '{{.Name}}' | grep -q '^deployment_stats.server-network$' && \
+    docker network rm deployment_stats.server-network 2>/dev/null || true
 
 # Build and start containers
 if [ "$FORCE_BUILD" = true ]; then
@@ -185,7 +185,7 @@ if [ "$WITH_NGINX" = true ]; then
     $DOCKER_COMPOSE --profile with-nginx up -d
 else
     echo -e "${YELLOW}Starting services...${NC}"
-    $DOCKER_COMPOSE up -d model-server
+    $DOCKER_COMPOSE up -d stats.server
 fi
 
 # Wait for service to be ready
@@ -193,7 +193,7 @@ echo -e "${YELLOW}Waiting for service to start...${NC}"
 sleep 5
 
 # Check if service is running
-if docker ps | grep -q model-server; then
+if docker ps | grep -q stats.server; then
     echo -e "${GREEN}✓ Service is running${NC}"
 
     # Test health check
@@ -204,11 +204,11 @@ if docker ps | grep -q model-server; then
         echo -e "${GREEN}✓ Health check passed${NC}"
     else
         echo -e "${RED}✗ Health check failed${NC}"
-        echo -e "${YELLOW}Check logs: docker logs model-server${NC}"
+        echo -e "${YELLOW}Check logs: docker logs stats.server${NC}"
     fi
 else
     echo -e "${RED}✗ Service failed to start${NC}"
-    echo -e "${YELLOW}Check logs: docker logs model-server${NC}"
+    echo -e "${YELLOW}Check logs: docker logs stats.server${NC}"
     exit 1
 fi
 
@@ -218,7 +218,7 @@ echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}Deployment Complete!${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo ""
-echo -e "Container: ${GREEN}model-server${NC}"
+echo -e "Container: ${GREEN}stats.server${NC}"
 echo -e "Host Port: ${GREEN}$HOST_PORT${NC}"
 echo -e "Container Port: ${GREEN}8085${NC}"
 if [ "$WITH_NGINX" = true ]; then
@@ -233,11 +233,11 @@ else
 fi
 echo ""
 echo -e "${YELLOW}Useful Commands:${NC}"
-echo -e "  View logs:           ${GREEN}docker logs -f model-server${NC}"
+echo -e "  View logs:           ${GREEN}docker logs -f stats.server${NC}"
 echo -e "  Stop service:        ${GREEN}$DOCKER_COMPOSE down${NC}"
 echo -e "  Restart service:     ${GREEN}$DOCKER_COMPOSE restart${NC}"
 echo -e "  View containers:     ${GREEN}docker ps${NC}"
-echo -e "  Execute in container: ${GREEN}docker exec -it model-server bash${NC}"
+echo -e "  Execute in container: ${GREEN}docker exec -it stats.server bash${NC}"
 echo ""
 echo -e "${YELLOW}Test the API:${NC}"
 echo -e "  ${GREEN}curl http://localhost:$HOST_PORT/${NC}"

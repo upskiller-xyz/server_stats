@@ -6,19 +6,19 @@ After=network.target
 Type=simple
 User=modelserver
 Group=modelserver
-WorkingDirectory=/opt/model-server
-Environment="PATH=/opt/model-server/venv/bin"
+WorkingDirectory=/opt/stats.server
+Environment="PATH=/opt/stats.server/venv/bin"
 Environment="PORT=8085"
-EnvironmentFile=/opt/model-server/.env
-ExecStart=/opt/model-server/venv/bin/gunicorn \
+EnvironmentFile=/opt/stats.server/.env
+ExecStart=/opt/stats.server/venv/bin/gunicorn \
     --bind 0.0.0.0:${PORT} \
     --workers ${WORKERS} \
     --threads ${THREADS} \
     --timeout ${TIMEOUT} \
-    --access-logfile /var/log/model-server/access.log \
-    --error-logfile /var/log/model-server/error.log \
+    --access-logfile /var/log/stats.server/access.log \
+    --error-logfile /var/log/stats.server/error.log \
     --log-level ${GUNICORN_LOG_LEVEL} \
-    --chdir /opt/model-server/src \
+    --chdir /opt/stats.server/src \
     main:app
 
 # Restart policy
@@ -30,7 +30,7 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/var/log/model-server
+ReadWritePaths=/var/log/stats.server
 
 # Resource limits
 LimitNOFILE=65536
