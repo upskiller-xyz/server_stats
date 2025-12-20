@@ -12,7 +12,7 @@ class RangePolygonMetric(BaseMetric):
         Create a binary mask where 1 indicates values within the range.
         
         Args:
-            values: Matrix of float values (numpy array)
+            values: Result of float values (numpy array)
             mask: Optional boolean mask of same shape as values.
                  True indicates valid values, False indicates values to ignore.
                  If None, all values are considered valid.

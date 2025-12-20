@@ -92,7 +92,7 @@ class ServerMetricsApp:
             run_request = RunRequest.from_dict(data)
 
             # Calculate metrics
-            metrics = self._calculator.calculate_all(run_request.matrix, run_request.mask)
+            metrics = self._calculator.calculate_all(run_request.result, run_request.mask)
 
             # Build response
             response = RunResponse(metrics=metrics)

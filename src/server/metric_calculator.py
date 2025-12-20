@@ -5,7 +5,7 @@ from src.components.metric_types import MetricType
 
 class MetricCalculator:
     """
-    Calculates all metrics for given matrix and mask.
+    Calculates all metrics for given result and mask.
     Uses Strategy pattern with metric type mapping.
     """
 
@@ -30,7 +30,7 @@ class MetricCalculator:
         Calculate all available metrics on the masked values.
 
         Args:
-            values: Matrix of float values (0-10)
+            values: Result of float values (0-10)
             mask: Binary mask (same dimensions as values)
 
         Returns:

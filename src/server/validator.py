@@ -19,8 +19,8 @@ class RequestValidator:
         Initialize validator with value constraints.
 
         Args:
-            min_value: Minimum allowed matrix value
-            max_value: Maximum allowed matrix value
+            min_value: Minimum allowed result value
+            max_value: Maximum allowed result value
         """
         self._min_value = min_value
         self._max_value = max_value
@@ -36,9 +36,9 @@ class RequestValidator:
             ValidationError: If validation fails
         """
         self._validate_required_fields(data)
-        matrix = self._validate_matrix(data[RequestKeys.MATRIX.value])
+        result = self._validate_result(data[RequestKeys.RESULT.value])
         mask = self._validate_mask(data[RequestKeys.MASK.value])
-        self._validate_dimensions(matrix, mask)
+        self._validate_dimensions(result, mask)
         self._validate_mask_has_valid_area(mask)
 
     def _validate_required_fields(self, data: Dict[str, Any]) -> None:
@@ -51,40 +51,40 @@ class RequestValidator:
         Raises:
             ValidationError: If required fields are missing
         """
-        if RequestKeys.MATRIX.value not in data:
-            raise ValidationError(ValidationMessages.MISSING_MATRIX.value)
+        if RequestKeys.RESULT.value not in data:
+            raise ValidationError(ValidationMessages.MISSING_RESULT.value)
 
         if RequestKeys.MASK.value not in data:
             raise ValidationError(ValidationMessages.MISSING_MASK.value)
 
-    def _validate_matrix(self, matrix_data: Any) -> np.ndarray:
+    def _validate_result(self, result_data: Any) -> np.ndarray:
         """
-        Validate and convert matrix data.
+        Validate and convert result data.
 
         Args:
-            matrix_data: Raw matrix data
+            result_data: Raw result data
 
         Returns:
             Validated numpy array
 
         Raises:
-            ValidationError: If matrix validation fails
+            ValidationError: If result validation fails
         """
-        if not isinstance(matrix_data, (list, np.ndarray)):
-            raise ValidationError(ValidationMessages.INVALID_MATRIX_TYPE.value)
+        if not isinstance(result_data, (list, np.ndarray)):
+            raise ValidationError(ValidationMessages.INVALID_RESULT_TYPE.value)
 
         try:
-            matrix = np.array(matrix_data, dtype=float)
+            result = np.array(result_data, dtype=float)
         except (ValueError, TypeError):
-            raise ValidationError(ValidationMessages.INVALID_MATRIX_VALUES.value)
+            raise ValidationError(ValidationMessages.INVALID_RESULT_VALUES.value)
 
-        if matrix.size == 0:
-            raise ValidationError(ValidationMessages.EMPTY_MATRIX.value)
+        if result.size == 0:
+            raise ValidationError(ValidationMessages.EMPTY_RESULT.value)
 
-        if not self._check_value_range(matrix):
-            raise ValidationError(ValidationMessages.INVALID_MATRIX_VALUES.value)
+        if not self._check_value_range(result):
+            raise ValidationError(ValidationMessages.INVALID_RESULT_VALUES.value)
 
-        return matrix
+        return result
 
     def _validate_mask(self, mask_data: Any) -> np.ndarray:
         """
@@ -112,18 +112,18 @@ class RequestValidator:
 
         return mask
 
-    def _validate_dimensions(self, matrix: np.ndarray, mask: np.ndarray) -> None:
+    def _validate_dimensions(self, result: np.ndarray, mask: np.ndarray) -> None:
         """
-        Validate that matrix and mask have matching dimensions.
+        Validate that result and mask have matching dimensions.
 
         Args:
-            matrix: Matrix array
+            result: Result array
             mask: Mask array
 
         Raises:
             ValidationError: If dimensions don't match
         """
-        if matrix.shape != mask.shape:
+        if result.shape != mask.shape:
             raise ValidationError(ValidationMessages.SHAPE_MISMATCH.value)
 
     def _validate_mask_has_valid_area(self, mask: np.ndarray) -> None:
@@ -139,17 +139,17 @@ class RequestValidator:
         if not np.any(mask == 1):
             raise ValidationError(ValidationMessages.NO_VALID_MASK_AREA.value)
 
-    def _check_value_range(self, matrix: np.ndarray) -> bool:
+    def _check_value_range(self, result: np.ndarray) -> bool:
         """
-        Check if all matrix values are within valid range.
+        Check if all result values are within valid range.
 
         Args:
-            matrix: Matrix array
+            result: Result array
 
         Returns:
             True if all values are valid, False otherwise
         """
-        return bool(np.all((matrix >= self._min_value) & (matrix <= self._max_value)))
+        return bool(np.all((result >= self._min_value) & (result <= self._max_value)))
 
     def _check_binary_values(self, mask: np.ndarray) -> bool:
         """

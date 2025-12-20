@@ -16,7 +16,7 @@ http://localhost:5000
 
 ### POST /run
 
-Calculate statistical metrics on a matrix with a binary mask.
+Calculate statistical metrics on a result with a binary mask.
 
 #### Request
 
@@ -25,19 +25,19 @@ Calculate statistical metrics on a matrix with a binary mask.
 **Body:**
 ```json
 {
-  "matrix": [[float, ...], ...],
+  "result": [[float, ...], ...],
   "mask": [[int, ...], ...]
 }
 ```
 
 **Parameters:**
-- `matrix` (required): 2D array of float values (0.0 - 10.0)
-- `mask` (required): 2D array of binary values (0 or 1), same dimensions as matrix
+- `result` (required): 2D array of float values (0.0 - 10.0)
+- `mask` (required): 2D array of binary values (0 or 1), same dimensions as result
 
 **Validation Rules:**
-- Matrix values must be floats between 0.0 and 10.0
+- Result values must be floats between 0.0 and 10.0
 - Mask values must be binary (0 or 1)
-- Matrix and mask must have identical dimensions
+- Result and mask must have identical dimensions
 - Mask must contain at least one value of 1
 
 #### Response
@@ -89,7 +89,7 @@ import requests
 response = requests.post(
     "http://localhost:5000/run",
     json={
-        "matrix": [[1.5, 2.3, 3.7], [4.2, 5.8, 6.1]],
+        "result": [[1.5, 2.3, 3.7], [4.2, 5.8, 6.1]],
         "mask": [[1, 1, 0], [1, 0, 1]]
     }
 )
@@ -157,10 +157,10 @@ curl http://localhost:5000/health
 
 | Error Message | Cause |
 |--------------|-------|
-| `Missing 'matrix' in request body` | Request missing required matrix field |
+| `Missing 'result' in request body` | Request missing required result field |
 | `Missing 'mask' in request body` | Request missing required mask field |
-| `Matrix and mask must have the same dimensions` | Dimension mismatch |
-| `Matrix values must be floats between 0 and 10` | Invalid matrix values |
+| `Result and mask must have the same dimensions` | Dimension mismatch |
+| `Result values must be floats between 0 and 10` | Invalid result values |
 | `Mask values must be binary (0 or 1)` | Invalid mask values |
 | `Mask must contain at least one value of 1` | No valid area in mask |
 

@@ -6,7 +6,7 @@ import numpy as np
 @dataclass
 class RunRequest:
     """Request model for /run endpoint."""
-    matrix: np.ndarray
+    result: np.ndarray
     mask: np.ndarray
 
     @classmethod
@@ -15,14 +15,14 @@ class RunRequest:
         Create RunRequest from dictionary.
 
         Args:
-            data: Dictionary containing matrix and mask
+            data: Dictionary containing result and mask
 
         Returns:
             RunRequest instance
         """
-        matrix = np.array(data['matrix'], dtype=float)
+        result = np.array(data['result'], dtype=float)
         mask = np.array(data['mask'], dtype=int)
-        return cls(matrix=matrix, mask=mask)
+        return cls(result=result, mask=mask)
 
 
 @dataclass

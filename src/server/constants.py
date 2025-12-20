@@ -30,18 +30,18 @@ class ResponseKeys(ExtendedEnum):
 
 class RequestKeys(ExtendedEnum):
     """Request JSON keys."""
-    MATRIX = "matrix"
+    RESULT = "result"
     MASK = "mask"
 
 
 class ValidationMessages(ExtendedEnum):
     """Validation error messages."""
-    MISSING_MATRIX = "Missing 'matrix' in request body"
+    MISSING_RESULT = "Missing 'result' in request body"
     MISSING_MASK = "Missing 'mask' in request body"
-    INVALID_MATRIX_TYPE = "Matrix must be a list or array"
+    INVALID_RESULT_TYPE = "Result must be a list or array"
     INVALID_MASK_TYPE = "Mask must be a list or array"
-    SHAPE_MISMATCH = "Matrix and mask must have the same dimensions"
-    INVALID_MATRIX_VALUES = "Matrix values must be floats between 0 and 10"
+    SHAPE_MISMATCH = "Result and mask must have the same dimensions"
+    INVALID_RESULT_VALUES = "Result values must be floats between 0 and 10"
     INVALID_MASK_VALUES = "Mask values must be binary (0 or 1)"
-    EMPTY_MATRIX = "Matrix cannot be empty"
+    EMPTY_RESULT = "Result cannot be empty"
     NO_VALID_MASK_AREA = "Mask must contain at least one value of 1"
