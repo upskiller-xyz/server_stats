@@ -15,6 +15,7 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 from src.server.flask_server import ServerMetricsApp, FlaskServerConfig
+from src.server.http_policy import HttpPolicy
 
 
 def main() -> None:
@@ -23,7 +24,7 @@ def main() -> None:
     config = FlaskServerConfig(
         host="0.0.0.0",
         port=port,
-        debug=True
+        debug=HttpPolicy.debug_enabled()
     )
     server = ServerMetricsApp(config)
     server.run()
