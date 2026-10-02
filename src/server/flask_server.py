@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
+from werkzeug.exceptions import HTTPException
 import logging
 from typing import Tuple, Dict, Any
 from src.server.constants import (
@@ -11,6 +11,7 @@ from src.server.constants import (
 from src.server.validator import RequestValidator, ValidationError
 from src.server.metric_calculator import MetricCalculator
 from src.server.models import RunRequest, RunResponse, ErrorResponse
+from src.server.http_policy import HttpPolicy
 
 
 class FlaskServerConfig:
@@ -50,15 +51,17 @@ class ServerMetricsApp:
         """
         self._config = config
         self._app = Flask(__name__)
-        self._setup_cors()
+        self._setup_http_policy()
         self._setup_logging()
         self._validator = RequestValidator()
         self._calculator = MetricCalculator()
         self._register_routes()
 
-    def _setup_cors(self) -> None:
-        """Configure CORS for the Flask application."""
-        CORS(self._app)
+    def _setup_http_policy(self) -> None:
+        """Request-size limit and opt-in CORS (internal service: none by default)."""
+        HttpPolicy.from_environment(
+            default_max_bytes=ServerConfig.MAX_CONTENT_LENGTH.value
+        ).apply(self._app)
 
     def _setup_logging(self) -> None:
         """Configure logging for the application."""
@@ -103,6 +106,10 @@ class ServerMetricsApp:
         except ValidationError as e:
             self._logger.warning(f"Validation error: {str(e)}")
             return self._error_response(str(e), HttpStatusCode.BAD_REQUEST.value)
+
+        except HTTPException:
+            # Werkzeug errors (e.g. 413 body too large) keep their own status.
+            raise
 
         except Exception as e:
             self._logger.error(f"Internal server error: {str(e)}", exc_info=True)

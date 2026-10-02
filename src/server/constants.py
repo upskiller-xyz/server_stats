@@ -5,7 +5,8 @@ class ServerConfig(ExtendedEnum):
     """Server configuration constants."""
     DEFAULT_PORT = 5000
     DEFAULT_HOST = "0.0.0.0"
-    MAX_CONTENT_LENGTH = 16777216  # 16MB
+    # Default request-body limit (result + mask arrays as JSON); env-overridable.
+    MAX_CONTENT_LENGTH = 67108864  # 64 MiB
 
 
 class HttpStatusCode(ExtendedEnum):

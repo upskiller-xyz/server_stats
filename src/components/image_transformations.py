@@ -121,7 +121,6 @@ class ImageMasker:
         else:
             # Fallback for unexpected dimensions
             mask = ground_truth != 0
-        cv2.imwrite("mask.png", mask.astype(np.uint8)*255)
         return mask.astype(bool)
     
     @classmethod
