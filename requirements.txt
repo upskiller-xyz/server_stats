@@ -14,8 +14,8 @@ requests>=2.32.0,<3.0.0
 setuptools>=81.0.0,<84.0.0
 
 # Scientific Computing
-numpy>=1.24.0,<2.0.0
-opencv-python-headless>=4.8.0,<5.0.0
+numpy>=2.3.3,<3.0.0
+opencv-python-headless>=4.13.0.90,<5.0.0
 
 
 # Production Server (optional for Docker deployment)
