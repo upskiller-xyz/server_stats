@@ -52,6 +52,7 @@ class ModelLoader(ABC):
     def load(self) -> Model:
         pass
 
+
 class CheckpointModelLoader(ModelLoader):
     def __init__(self, checkpoint_url: str):
         self.checkpoint_url = checkpoint_url
@@ -67,16 +68,18 @@ class CheckpointModelLoader(ModelLoader):
 from src.utils.extended_enum import ExtendedEnumMixin
 from enum import Enum
 
+
 class ModelStatus(ExtendedEnumMixin, Enum):
     LOADING = "loading"
     READY = "ready"
     ERROR = "error"
 
+
 # Now you can use enhanced methods:
 status = ModelStatus.by_value("loading")  # Find by value
-status = ModelStatus.from_name("READY")   # Case-insensitive name lookup
+status = ModelStatus.from_name("READY")  # Case-insensitive name lookup
 all_statuses = ModelStatus.get_members()  # Get all members
-all_values = ModelStatus.get_values()     # Get all values
+all_values = ModelStatus.get_values()  # Get all values
 
 # Bad Example
 status = "loading"  # Magic string

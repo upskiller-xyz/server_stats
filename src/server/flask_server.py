@@ -1,17 +1,19 @@
-from flask import Flask, request, jsonify
-from werkzeug.exceptions import HTTPException
 import logging
-from typing import Tuple, Dict, Any
+from typing import Any, Dict, Tuple
+
+from flask import Flask, jsonify, request
+from werkzeug.exceptions import HTTPException
+
 from src.server.constants import (
-    ServerConfig,
     HttpStatusCode,
+    ResponseKeys,
     RouteEndpoints,
-    ResponseKeys
+    ServerConfig,
 )
-from src.server.validator import RequestValidator, ValidationError
-from src.server.metric_calculator import MetricCalculator
-from src.server.models import RunRequest, RunResponse, ErrorResponse
 from src.server.http_policy import HttpPolicy
+from src.server.metric_calculator import MetricCalculator
+from src.server.models import ErrorResponse, RunRequest, RunResponse
+from src.server.validator import RequestValidator, ValidationError
 
 
 class FlaskServerConfig:
@@ -21,7 +23,7 @@ class FlaskServerConfig:
         self,
         host: str = ServerConfig.DEFAULT_HOST.value,
         port: int = ServerConfig.DEFAULT_PORT.value,
-        debug: bool = False
+        debug: bool = False,
     ):
         """
         Initialize server configuration.
@@ -67,14 +69,16 @@ class ServerMetricsApp:
         """Configure logging for the application."""
         logging.basicConfig(
             level=logging.INFO if not self._config.debug else logging.DEBUG,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         )
         self._logger = logging.getLogger(__name__)
 
     def _register_routes(self) -> None:
         """Register all API routes."""
-        self._app.route(RouteEndpoints.RUN.value, methods=['POST'])(self._handle_run)
-        self._app.route(RouteEndpoints.HEALTH.value, methods=['GET'])(self._handle_health)
+        self._app.route(RouteEndpoints.RUN.value, methods=["POST"])(self._handle_run)
+        self._app.route(RouteEndpoints.HEALTH.value, methods=["GET"])(
+            self._handle_health
+        )
 
     def _handle_run(self) -> Tuple[Dict[str, Any], int]:
         """
@@ -86,7 +90,9 @@ class ServerMetricsApp:
         try:
             data = request.get_json()
             if data is None:
-                return self._error_response("Request body must be JSON", HttpStatusCode.BAD_REQUEST.value)
+                return self._error_response(
+                    "Request body must be JSON", HttpStatusCode.BAD_REQUEST.value
+                )
 
             # Validate request
             self._validator.validate(data)
@@ -95,7 +101,9 @@ class ServerMetricsApp:
             run_request = RunRequest.from_dict(data)
 
             # Calculate metrics
-            metrics = self._calculator.calculate_all(run_request.result, run_request.mask)
+            metrics = self._calculator.calculate_all(
+                run_request.result, run_request.mask
+            )
 
             # Build response
             response = RunResponse(metrics=metrics)
@@ -114,8 +122,7 @@ class ServerMetricsApp:
         except Exception as e:
             self._logger.error(f"Internal server error: {str(e)}", exc_info=True)
             return self._error_response(
-                "Internal server error",
-                HttpStatusCode.INTERNAL_SERVER_ERROR.value
+                "Internal server error", HttpStatusCode.INTERNAL_SERVER_ERROR.value
             )
 
     def _handle_health(self) -> Tuple[Dict[str, str], int]:
@@ -127,7 +134,9 @@ class ServerMetricsApp:
         """
         return {ResponseKeys.STATUS.value: "healthy"}, HttpStatusCode.OK.value
 
-    def _error_response(self, message: str, status_code: int) -> Tuple[Dict[str, str], int]:
+    def _error_response(
+        self, message: str, status_code: int
+    ) -> Tuple[Dict[str, str], int]:
         """
         Create error response.
 
@@ -145,9 +154,7 @@ class ServerMetricsApp:
         """Start the Flask server."""
         self._logger.info(f"Starting server on {self._config.host}:{self._config.port}")
         self._app.run(
-            host=self._config.host,
-            port=self._config.port,
-            debug=self._config.debug
+            host=self._config.host, port=self._config.port, debug=self._config.debug
         )
 
     @property

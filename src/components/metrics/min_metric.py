@@ -1,5 +1,7 @@
-import numpy as np
 from typing import Optional
+
+import numpy as np
+
 from .base import BaseMetric
 
 
@@ -30,7 +32,12 @@ class MinMetric(BaseMetric):
         return float(np.min(masked_values))
 
     @classmethod
-    def compare(cls, ground_truth: np.ndarray, simulation: np.ndarray, mask: Optional[np.ndarray] = None) -> float:
+    def compare(
+        cls,
+        ground_truth: np.ndarray,
+        simulation: np.ndarray,
+        mask: Optional[np.ndarray] = None,
+    ) -> float:
         """
         Compare two images by calculating minimum difference.
 
@@ -51,4 +58,4 @@ class MinMetric(BaseMetric):
 
     @classmethod
     def _invalid(cls, threshold: float) -> dict:
-        return float('nan')
+        return float("nan")

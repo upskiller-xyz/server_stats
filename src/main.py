@@ -1,11 +1,11 @@
 import os
-from typing import Dict, Any
+from typing import Any, Dict
 
 # Disable GPU/CUDA to prevent bus errors on WSL2
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-os.environ['OPENCV_IO_ENABLE_OPENEXR'] = '0'
-os.environ['OMP_NUM_THREADS'] = '1'
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+os.environ["OPENCV_IO_ENABLE_OPENEXR"] = "0"
+os.environ["OMP_NUM_THREADS"] = "1"
 
 import sys
 from pathlib import Path
@@ -14,7 +14,7 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.server.flask_server import ServerMetricsApp, FlaskServerConfig
+from src.server.flask_server import FlaskServerConfig, ServerMetricsApp
 from src.server.http_policy import HttpPolicy
 
 
@@ -22,9 +22,7 @@ def main() -> None:
     """Main entry point"""
     port = int(os.getenv("PORT", 8081))
     config = FlaskServerConfig(
-        host="0.0.0.0",
-        port=port,
-        debug=HttpPolicy.debug_enabled()
+        host="0.0.0.0", port=port, debug=HttpPolicy.debug_enabled()
     )
     server = ServerMetricsApp(config)
     server.run()
@@ -35,11 +33,7 @@ def main() -> None:
 def create_app():
     """Factory function for creating the Flask app (for gunicorn)"""
     port = int(os.getenv("PORT", 8081))
-    config = FlaskServerConfig(
-        host="0.0.0.0",
-        port=port,
-        debug=False
-    )
+    config = FlaskServerConfig(host="0.0.0.0", port=port, debug=False)
     server = ServerMetricsApp(config)
     return server.app
 
