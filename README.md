@@ -175,8 +175,10 @@ SCW_IMAGE=server_template
 Build and run using Docker:
 ```sh
 docker build -t stats-server .
-docker run -p 8000:8000 stats-server
+docker run -p 8085:8085 stats-server
 ```
+
+The image is built on [Project Hummingbird](https://gitlab.com/redhat/hummingbird/containers) (Red Hat hardened, distroless Python 3.14): a builder stage creates the venv, and the runtime image has no shell or package manager and runs as UID 65532. Both base images are pinned by digest.
 
 #### Cloud Deployment
 Deploy to Google Cloud Platform:
