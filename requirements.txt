@@ -10,9 +10,6 @@ flask-cors>=6.0.0,<7.0.0
 # HTTP Client
 requests>=2.32.0,<3.0.0
 
-# Utilities & Logging
-setuptools>=81.0.0,<84.0.0
-
 # Scientific Computing
 numpy>=2.3.3,<3.0.0
 opencv-python-headless>=4.13.0.90,<5.0.0
