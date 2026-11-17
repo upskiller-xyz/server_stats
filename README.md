@@ -136,10 +136,10 @@ Calculate metrics on result with binary mask:
 ```python
 import requests
 
-response = requests.post("http://localhost:5000/run", json={
-    "result": [[1.5, 2.3, 3.7], [4.2, 5.8, 6.1]],
-    "mask": [[1, 1, 0], [1, 0, 1]]
-})
+response = requests.post(
+    "http://localhost:5000/run",
+    json={"result": [[1.5, 2.3, 3.7], [4.2, 5.8, 6.1]], "mask": [[1, 1, 0], [1, 0, 1]]},
+)
 
 print(response.json())
 # {"metrics": {"mean": 3.45, "median": 3.7, ...}}

@@ -1,7 +1,7 @@
-from .extended_enum import ExtendedEnum
 from typing import Type
 
 from . import metrics as m
+from .extended_enum import ExtendedEnum
 
 
 class MetricType(ExtendedEnum):
@@ -17,4 +17,3 @@ class MetricType(ExtendedEnum):
     COMPLIANCE_ANALYSIS = m.ComplianceMetric
     QUANTIZED_IOU = m.QuantizedIoU
     MAE = m.MAEMetric
-    

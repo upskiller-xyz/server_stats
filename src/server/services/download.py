@@ -1,6 +1,8 @@
 import os
-import requests
 from typing import Optional
+
+import requests
+
 from ..interfaces import IDownloadStrategy, ILogger
 
 
@@ -25,7 +27,7 @@ class HTTPDownloadStrategy(IDownloadStrategy):
 
             os.makedirs(os.path.dirname(local_path), exist_ok=True)
 
-            with open(local_path, 'wb') as file:
+            with open(local_path, "wb") as file:
                 for chunk in response.iter_content(chunk_size=self._chunk_size):
                     if chunk:
                         file.write(chunk)

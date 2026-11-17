@@ -1,17 +1,13 @@
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
-from src.server.interfaces import IServerController, ILogger
 from src.server.enums import ServerStatus
+from src.server.interfaces import ILogger, IServerController
 
 
 class ServerController(IServerController):
     """Generic server controller implementing IServerController interface"""
 
-    def __init__(
-        self,
-        logger: ILogger,
-        services: Optional[Dict[str, Any]] = None
-    ):
+    def __init__(self, logger: ILogger, services: Optional[Dict[str, Any]] = None):
         """
         Initialize the controller with dependencies
 
@@ -29,7 +25,7 @@ class ServerController(IServerController):
         try:
             # Initialize all registered services
             for service_name, service in self._services.items():
-                if hasattr(service, 'initialize'):
+                if hasattr(service, "initialize"):
                     self._logger.debug(f"Initializing service: {service_name}")
                     service.initialize()
 
@@ -49,12 +45,9 @@ class ServerController(IServerController):
         """
         components = {}
         for service_name, service in self._services.items():
-            if hasattr(service, 'get_status'):
+            if hasattr(service, "get_status"):
                 components[service_name] = service.get_status()
             else:
                 components[service_name] = "ready"
 
-        return {
-            "status": self._status.value,
-            "services": components
-        }
+        return {"status": self._status.value, "services": components}

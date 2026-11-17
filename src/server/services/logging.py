@@ -1,8 +1,9 @@
 import logging
 import sys
 from typing import Optional
-from ..interfaces import ILogger
+
 from ..enums import LogLevel
+from ..interfaces import ILogger
 
 
 class StructuredLogger(ILogger):
@@ -18,7 +19,7 @@ class StructuredLogger(ILogger):
             LogLevel.DEBUG: logging.DEBUG,
             LogLevel.INFO: logging.INFO,
             LogLevel.WARNING: logging.WARNING,
-            LogLevel.ERROR: logging.ERROR
+            LogLevel.ERROR: logging.ERROR,
         }
 
         self._logger.setLevel(log_levels[level])
@@ -26,7 +27,7 @@ class StructuredLogger(ILogger):
         if not self._logger.handlers:
             handler = logging.StreamHandler(sys.stdout)
             formatter = logging.Formatter(
-                '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+                "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
             )
             handler.setFormatter(formatter)
             self._logger.addHandler(handler)

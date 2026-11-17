@@ -1,10 +1,13 @@
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
 import numpy as np
-from src.server.constants import ValidationMessages, RequestKeys
+
+from src.server.constants import RequestKeys, ValidationMessages
 
 
 class ValidationError(Exception):
     """Custom exception for validation errors."""
+
     pass
 
 

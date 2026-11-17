@@ -1,4 +1,5 @@
 """Server package for metrics calculation application."""
-from src.server.flask_server import ServerMetricsApp, FlaskServerConfig
 
-__all__ = ['ServerMetricsApp', 'FlaskServerConfig']
+from src.server.flask_server import FlaskServerConfig, ServerMetricsApp
+
+__all__ = ["ServerMetricsApp", "FlaskServerConfig"]
