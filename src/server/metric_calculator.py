@@ -1,5 +1,7 @@
 from typing import Dict, Set
+
 import numpy as np
+
 from src.components.metric_types import MetricType
 
 
@@ -10,7 +12,7 @@ class MetricCalculator:
     """
 
     # Metrics to include in endpoint responses
-    ENDPOINT_METRICS: Set[str] = {'mean', 'median', 'min', 'max', 'valid_area'}
+    ENDPOINT_METRICS: Set[str] = {"mean", "median", "min", "max", "valid_area"}
 
     def __init__(self):
         """Initialize calculator with metric type mapping."""
@@ -28,7 +30,9 @@ class MetricCalculator:
             for metric_type in MetricType.get_members()
         }
 
-    def calculate_all(self, values: np.ndarray, mask: np.ndarray, filter_for_endpoint: bool = True) -> Dict[str, float]:
+    def calculate_all(
+        self, values: np.ndarray, mask: np.ndarray, filter_for_endpoint: bool = True
+    ) -> Dict[str, float]:
         """
         Calculate all available metrics on the masked values.
 

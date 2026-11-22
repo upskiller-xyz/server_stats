@@ -1,10 +1,11 @@
 from .extended_enum import ExtendedEnum
 
-
 BUSINESS_DF = 1.0
+
 
 class RequestKeys(ExtendedEnum):
     """Enumeration for request data keys."""
+
     GROUND_TRUTH = "ground_truth"
     SIMULATION = "simulation"
     IMAGE = "image"
@@ -17,12 +18,14 @@ class RequestKeys(ExtendedEnum):
 
 class RequestMode(ExtendedEnum):
     """Enumeration for request processing modes."""
+
     SINGLE = "single"
     COMPARISON = "comparison"
 
 
 class MetricNames(ExtendedEnum):
     """Enumeration for metric result names."""
+
     # Statistical Metrics
     MEAN_DIFFERENCE = "mean_difference"
     MEDIAN_DIFFERENCE = "median_difference"
@@ -61,13 +64,16 @@ class MetricNames(ExtendedEnum):
             cls.MEAN_DIFFERENCE: "Mean difference",
             cls.MEDIAN_DIFFERENCE: "Median difference",
             cls.QUANTIZED_IOU: "Quantized IoU",
-            cls.THRESHOLD_ACCURACY: "Threshold accuracy"
+            cls.THRESHOLD_ACCURACY: "Threshold accuracy",
         }
-        return display_names.get(metric_name, metric_name.value.replace('_', ' ').title())
+        return display_names.get(
+            metric_name, metric_name.value.replace("_", " ").title()
+        )
 
 
 class IoUMethods(ExtendedEnum):
     """Enumeration for Quantized IoU calculation methods."""
+
     ALL = "all"
     LE = "le"
     GT = "gt"
@@ -76,6 +82,7 @@ class IoUMethods(ExtendedEnum):
 
 class ErrorMessages(ExtendedEnum):
     """Enumeration for error messages."""
+
     MISSING_DATA = "Missing data in request"
     MISSING_IMAGE = "Missing image in request"
     MISSING_GROUND_TRUTH_SIMULATION = "Missing ground_truth or simulation in request"
@@ -84,13 +91,15 @@ class ErrorMessages(ExtendedEnum):
     INTERNAL_SERVER_ERROR = "Internal server error: {}"
     INVALID_METHOD = "Invalid method"
     INVALID_MODE = "Invalid mode"
-    COMPARISON_REQUIRED = "{} calculation requires both ground_truth and simulation data for comparison"
-
+    COMPARISON_REQUIRED = (
+        "{} calculation requires both ground_truth and simulation data for comparison"
+    )
 
 
 # Default values
 class Defaults(ExtendedEnum):
     """Default values for various parameters."""
+
     THRESHOLD_1_0 = 1.0
     THRESHOLD_1_25 = 1.25
     THRESHOLD_1_5 = 1.5

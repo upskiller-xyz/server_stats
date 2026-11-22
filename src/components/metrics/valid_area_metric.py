@@ -1,5 +1,7 @@
-import numpy as np
 from typing import Optional
+
+import numpy as np
+
 from .base import BaseMetric
 
 
@@ -34,7 +36,12 @@ class ValidAreaMetric(BaseMetric):
         return float(percentage)
 
     @classmethod
-    def compare(cls, ground_truth: np.ndarray, simulation: np.ndarray, mask: Optional[np.ndarray] = None) -> float:
+    def compare(
+        cls,
+        ground_truth: np.ndarray,
+        simulation: np.ndarray,
+        mask: Optional[np.ndarray] = None,
+    ) -> float:
         """
         Compare two images by calculating difference in valid area percentages.
 
@@ -55,4 +62,4 @@ class ValidAreaMetric(BaseMetric):
 
     @classmethod
     def _invalid(cls, threshold: float) -> dict:
-        return float('nan')
+        return float("nan")

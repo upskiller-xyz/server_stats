@@ -29,7 +29,7 @@ class ContentType(Enum):
 
     @classmethod
     def is_image(cls, content_type: str) -> bool:
-        return content_type.startswith('image/')
+        return content_type.startswith("image/")
 
 
 class HTTPStatus(Enum):
